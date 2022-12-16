@@ -37,10 +37,7 @@ mpl.use('agg')
 
 
 models_topdir = './trained_models'
-
-
-# In[12]:
-
+curr_dir = '.'
 
 def extract_hill_parameters(pX_list, Y_list):
     r_2_list = []
@@ -76,9 +73,6 @@ def extract_hill_parameters(pX_list, Y_list):
     return(np.array([r_2_list, top_list, bottom_list, ec50_list, nh_list]).T)
 
 
-# In[59]:
-
-
 def parameters_to_predictions(hill_array):
     all_categories = []
     all_probabilities = []
@@ -98,9 +92,15 @@ def parameters_to_predictions(hill_array):
     pred = curve_type_model.predict(hill_array_nonans)
     pred_proba_nonans = np.array(pred_proba_nonans).T
     for assign, probs in zip(pred,list(pred_proba_nonans[1])):
-        assign_index = list(assign).index(max(list(assign)))
-        proba = probs[assign_index]
-        category = curve_type_translation_dict[assign_index]
+        assigned = max(list(assign))
+        # The RF classifier can lead to no class being chosen
+        if assigned > 0 :
+            assign_index = list(assign).index(assigned)
+            proba = probs[assign_index]
+            category = curve_type_translation_dict[assign_index]
+        else :
+            category = 'NO'
+            proba = 0
         all_categories_nonans.append(category)
         all_probabilities_nonans.append(proba)
     # The category as 'XX' if Hill's parameters are missing 
@@ -113,8 +113,6 @@ def parameters_to_predictions(hill_array):
             all_probabilities.append(1)        
     return(all_categories,all_probabilities)
 
-
-# In[4]:
 
 
 curve_type_translation_dict = {0 : "CATOP", 1 : "CANB", 2 : "CASIG", 3 : "CANT", 4 : "CAHS", 5 : "CNA", 6 : "P", 7 : "NT", 8 : "LS", 9 : "B", 10 : "B", 11 : "W", 12 : "LU"}
@@ -134,8 +132,7 @@ with open(curve_type_model_filepath, "rb") as f:
     curve_type_model = pickle.load(f)
 
 
-# In[5]:
-
+# Load dataset
 
 datasets_topdir = './tox21-luc-biochem-p1'
 in_file ='tox21-luc-biochem-p1.txt'
@@ -163,13 +160,9 @@ work_df = my_df[['SAMPLE_ID', 'SAMPLE_DATA_TYPE','pX', 'pXhalf', 'Y', 'Yhalf']]
 work_df = work_df[[not s.startswith('viability') for s in work_df['SAMPLE_DATA_TYPE']]]
 
 
-# In[6]:
-
-
 curves_df = pd.DataFrame()
 curr_curve_dict = {}
 for i,g in work_df.sort_values(['SAMPLE_ID', 'SAMPLE_DATA_TYPE'],ascending=True).groupby('SAMPLE_ID'):
-    #print(i, g.shape[0])
     if g.shape[0] == 3: 
         curr_curve_dict['SAMPLE_ID'] = i
         curr_curve_dict['pX01_list'] = str(list(g['pX'][0:2]))
@@ -213,76 +206,15 @@ for i,g in work_df.sort_values(['SAMPLE_ID', 'SAMPLE_DATA_TYPE'],ascending=True)
     else:
         pass
 
-
-# In[7]:
-
-
-curves_df.columns
-
-
-# In[8]:
-
-
-curr_dir = '.'
-
-
-# In[13]:
-
+# Extract Hill's equation parameters and classify
 
 hill01_params = extract_hill_parameters(curves_df['pX01_list'],curves_df['Y01_list'])
-
-
-# In[18]:
-
-
-np.isnan(hill01_params.T[0])
-
-
-# In[22]:
-
-
-hill01_params[~np.isnan(hill01_params)]
-
-
-# In[34]:
-
-
-finite_indices = []
-i = 0
-for l in hill01_params:
-    if not True in np.isnan(l):
-        finite_indices.append(i)
-    i = i + 1
-
-
-# In[39]:
-
-
-hill01_params_nonans = hill01_params[finite_indices]
-
-
-# In[60]:
-
-
 hill01_categories,hill01_probabilities = parameters_to_predictions(hill01_params)
-
-
-# In[ ]:
-
-
 curves_df['category01'], curves_df['probability01'] = parameters_to_predictions(hill01_params)
-
-
-# In[64]:
-
-
 hill02_params = extract_hill_parameters(curves_df['pX02_list'],curves_df['Y02_list'])
 curves_df['category02'], curves_df['probability02'] = parameters_to_predictions(hill02_params)
-
-
-# In[67]:
-
-
+hill12_params = extract_hill_parameters(curves_df['pX12_list'],curves_df['Y12_list'])
+curves_df['category12'], curves_df['probability12'] = parameters_to_predictions(hill12_params)
 hill_params = extract_hill_parameters(curves_df['pX_list'],curves_df['Y_list'])
 curves_df['category'], curves_df['probability'] = parameters_to_predictions(hill_params)
 hill_half_params = extract_hill_parameters(curves_df['pXhalf_list'],curves_df['Yhalf_list'])
@@ -295,14 +227,8 @@ hill_half12_params = extract_hill_parameters(curves_df['pXhalf12_list'],curves_d
 curves_df['categoryhalf12'], curves_df['probabilityhalf12'] = parameters_to_predictions(hill_half12_params)
 
 
-# In[68]:
-
 
 curves_df = curves_df.merge(my_df[['SAMPLE_ID','ASSAY_OUTCOME','CURVE_CLASS2']].groupby('SAMPLE_ID').first(),on='SAMPLE_ID')
-
-
-# In[69]:
-
 
 out_file ='AI4DR_annotated_tox21_luc_biochem_p1_RF.pkl'
 
