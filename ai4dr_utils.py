@@ -89,3 +89,17 @@ def summarize_viz_triplicate_selection(df, size=6):
     titles = ['{} - {} \nAI4DR : {} - Prob : {}'.format(w,x,y,round(z,2)) for w,x,y,z in zip(df['SAMPLE_ID'].head(size),df['ASSAY_OUTCOME'].head(size),df['Final_cat012'].head(size),df['Final_proba012'].head(size))]
     _ = [ arrays_to_both_curves_images_w_title(w, x, y, z) for w,x,y,z in zip(df['pX_list'].head(size),df['Y_list'].head(size),df['Y_list_notr'].head(size),titles)]
     return
+
+def summarize_save_triplicate_selection_RF(df, directory, size=6):
+    print('Dataframe size : '+ str(df.shape[0]) + ' showing the ' + str(size) + ' first entries')
+    df.head()
+    titles = ['{} - {} \nRF model : {} - Prob : {}'.format(w,x,y,round(z,2)) for w,x,y,z in zip(df['SAMPLE_ID'].head(size),df['ASSAY_OUTCOME'].head(size),df['category'].head(size),df['probability'].head(size))]
+    _ = [ arrays_to_both_curves_images_w_title_and_save(w, x, y, z, directory,v) for w,x,y,z,v in zip(df['pX_list'].head(size),df['Y_list'].head(size),df['Y_list_notr'].head(size),titles,df['SAMPLE_ID'].head(size))]
+    return
+
+def summarize_viz_triplicate_selection_RF(df, size=6):
+    print('Dataframe size : '+ str(df.shape[0]) + ' showing the ' + str(size) + ' first entries')
+    df.head()
+    titles = ['{} - {} \nRF model : {} - Prob : {}'.format(w,x,y,round(z,2)) for w,x,y,z in zip(df['SAMPLE_ID'].head(size),df['ASSAY_OUTCOME'].head(size),df['category'].head(size),df['probability'].head(size))]
+    _ = [ arrays_to_both_curves_images_w_title(w, x, y, z) for w,x,y,z in zip(df['pX_list'].head(size),df['Y_list'].head(size),df['Y_list_notr'].head(size),titles)]
+    return
