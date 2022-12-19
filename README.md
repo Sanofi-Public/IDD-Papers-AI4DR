@@ -3,14 +3,24 @@
 
 This repository allows reproducing the results given the the paper  **AI4DR: Development and Implementation of an Annotation System for High-Throughput Dose-Response Experiments** by Bianciotto et al.
 
+Copyright Notice: Permission is hereby granted, free of charge, for academic research purpose only and for non-commercial use only, to any person from academic research or non-profit organization obtaining a copy of this software and associated documentation files (the "Software"), to use, copy, modify, or merge the Software, subject to the following conditions: this permission notice shall be included in all copies or substantial portions of the Software. All other rights are reserved. The Software is provided 'as is", without warranty of any kind, express or implied, including the warranties of noninfringement. 
+An international patent application related to this work has been published under number WO2022/112568. 
+
 A conda environment for making the AI4DR_Tox21_luc_biochem_dataset_analysis.ipynb notebook to run can be installed with the following command :
 ```
-conda create --name AI4DR_analysis --file AI4DR-env.txt
+conda create --name AI4DR_env --file AI4DR-env.txt
 ```
 
-The AI4DR_Tox21_luc_biochem_dataset_analysis.ipynb notebook contains analyses of the AI4DR predictions performed on the Tox21 'tox21-luc-biochem-p1' dataset.
+When in this environment, the hillfit library ( https://github.com/himoto/hillfit ) needs to be installed with :
+```
+pip3 install hillfit
+```
+The AI4DR_tox21-luc-biochem-p1_CNN_classification.py and AI4DR_tox21-luc-biochem-p1_RF_classification.py scripts allow to compute the classification either with the AI4DR (CNN for shape classification based on DRC images, MLP for dispersion classifier) or with the RF classifier (shape classifiction only).
+The AI4DR_Tox21_luc_biochem_dataset_analysis_AI4DR_model.ipynb notebook contains analyses of the AI4DR predictions performed on the Tox21 'tox21-luc-biochem-p1' dataset.
 One can find its description at this URL : https://tripod.nih.gov/tox/assays
 The data itself can be found at : https://tripod.nih.gov/tox21/pubdata/
+A copy of this data is provided in the tox21-luc-biochem-p1 directory for convenience.
+The AI4DR_Tox21_luc_biochem_dataset_analysis_RF_model.ipynb notebook contains analyses of the RF classifier performed on the Tox21 'tox21-luc-biochem-p1' dataset.
 
 As the original Tox21 DR data comes from tests on 15 concentrations (CONC0 to CONC14) performed in triplicate (replica 0,1 and 2), and different classifications were performed for each sample using either the full set of DR data or a subset of it. When half the concentrations were considered, the odd concentrations were skipped, leading to build 8 concentrations DR curves. 
 
@@ -31,7 +41,7 @@ The name of the different AI4DR-related fields in the curves_df dataframe are in
 | Replica 1,2    |       half     | pXhalf_list12 |  Yhalf12_list_notr  | Yhalf12_list     |    categoryhalf12      | probabilityhalf12  |      Disp_modelhalf12      |      Disp_Probahalf12      |
 
 
-The final AI4DR categories and probabilities that are computed in the notebook have the corresponding variable names:
+The final AI4DR categories and probabilities that are computed in the notebooks have the corresponding variable names:
 
 |  Replica considered | Concentrations considered | Final Category | Final probability |
 |:--------------:|:--------------:|:-----------------:|:-------------------:|
