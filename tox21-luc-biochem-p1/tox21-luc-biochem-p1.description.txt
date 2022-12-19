@@ -1,0 +1,20 @@
+qHTS assay to identify small molecule inhibitors of firefly luciferase
+U.S. Tox21 Program
+
+National Center for Advancing Translational Sciences [NCATS]
+NIH Chemical Genomics Center [NCGC]
+U.S. Environmental Protection Agency [EPA]
+National Institutes of Environmental Health Sciences [NIEHS]
+National Toxicology Program [NTP]
+U.S. Food and Drug Administration [FDA]
+
+Tox21 Assay Overview:
+
+Firefly (Photinus pyralis) luciferase is one of the most commonly used transcriptional reporters. Firefly luciferase reporter-gene assays are generally considered one of the most sensitive assay types (Wood, 1995; Wood, 1998). 
+
+However, it was initially observed, in 1991, by Thompson et al., that compounds that resemble the substrates of firefly luciferase (FLuc) can act as competitive inhibitors of the enzyme, and that these compounds, upon interaction with luciferase in the cell, can actually stabilize the protein and increase its half-life. 
+
+Previous profiling work by other groups to determine the prevalence of compounds that affect FLuc enzymatic activity (PubChem AID 411) identified that ~3% of the MLSMR library (then at ~72K) inhibited FLuc. Analysis of cell-based FLuc reporter gene assays posted in PubChem indicated that as many as 60% of the actives identified in a given screen using this type of assay were actually FLuc inhibitors (Auld et al., 2008). Thus the Tox21 10K library is profiled for activity against FLuc using a biochemical assay of purified FLuc and KM concentrations of FLuc substrates (D-luciferin and ATP).
+Tox21 Assay Protocol Summary:
+
+3 ul of substrate mix (containing 50 mM Tris acetate, pH 7.6, 13.3 mM Mg acetate, 10uM D-luciferin, 10uM ATP, 0.01% Tween, 0.05% BSA and dH2O ) is dispensed into each well of a Greiner white, solid-bottom 1536-well format plate using a flying reagent dispenser (FRD). These assay plates were then treated with 23nL of compound or DMSO using a Kalypsys pin tool, which allows for delivery of a 6-point interplate titration of each compound to the assay plate (quantitative HTS.) 1 uL of firefly luciferase mix (containing 50 mM Tris acetate, pH 7.6, 0.04 uM P. pyralis luciferase, 0.01% Tween, 0.05% BSA and dH2O) was then delivered by FRD to each well. Luciferase activity was then measured using a ViewLux CCD imager.
